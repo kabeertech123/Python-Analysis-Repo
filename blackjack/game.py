@@ -26,7 +26,8 @@ class Game:
         for i in range (0,2):
             self.player_hand.cards.append(player_inital_cards[i]) 
             self.dealer_hand.cards.append(dealer_inital_cards[i])
-            self.display_info_player_cards()
+            
+          
             
             if self.player_hand.cards[i].value == 0:
                 self.player_chooses_ace_value()
@@ -64,17 +65,29 @@ class Game:
         for i in range (0, len(self.dealer_hand.cards)):
             total += self.dealer_hand.cards[i].value
             
+            
         return total
+    
+    def dealer_logic(self, total):
+        
+        if total > 19:
+            return f"The dealer wants to now stand"
+        elif total < 5 :
+            self.dealer_hand.cards.append(self.deck.draw_1_card)
+
     
     def game_loop(self):
         loop = True
         
-        while loop:
+        #while loop:
             
-            self.deal_initial_cards()
-            print('___________________')
-            self.display_info_dealer_cards()
-            print(self.calculate_value_dealer())
+        self.deal_initial_cards()
+        self.display_info_player_cards()
+        print('___________________')
+        self.display_info_dealer_cards()
+        self.dealer_logic(self.calculate_value_dealer)
+        self.display_info_dealer_cards()
+        
             
            
             
