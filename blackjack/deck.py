@@ -34,9 +34,7 @@ class Deck:
         
     
     def shuffle(self):
-        counter = 0
-        
-        
+    
         random.shuffle(self.cards)
       
         
@@ -69,10 +67,8 @@ class Deck:
         
         
        
-deck = Deck()
 
-deck.create_deck()
 
-deck.print_deck()
-    
+
+
     
