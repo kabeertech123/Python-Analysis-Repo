@@ -21,24 +21,38 @@ class Game:
         
         player_inital_cards = self.deck.draw_2_cards()
         dealer_inital_cards = self.deck.draw_2_cards()
-    
+        
+        
+        dealer_total = 0
         
         for i in range (0,2):
             self.player_hand.cards.append(player_inital_cards[i]) 
             self.dealer_hand.cards.append(dealer_inital_cards[i])
             
+            dealer_total +=  self.calculate_value_dealer()
+            
           
             
             if self.player_hand.cards[i].value == 0:
                 self.player_chooses_ace_value()
+                
             
+        if self.dealer_hand.cards[i] == 0 and dealer_total > 19:
+                self.dealer_hand.cards[i].value = 1 
+                print("The dealer has set and Ace value to be 1")
+                
+        elif self.dealer_hand.cards[1] == 0 and dealer_total > 5:
+            self.dealer_hand.cards[1].value = 11     
+            print("The dealer has set and Ace value to be 11")
         
         
         
     def player_chooses_ace_value(self):
         player_choice = int(input("You have recieved an ace, enter the value u want the ace to be :"))
         
-        
+    
+            
+    
         for player_cards in (self.player_hand.cards):
             if player_choice == 1:
                 player_cards.value = 1
@@ -46,7 +60,8 @@ class Game:
                 
             elif player_choice == 11:
                 player_cards.value = 11
-                
+      
+         
 
             
     def display_info_player_cards(self):
@@ -62,7 +77,7 @@ class Game:
 
     def calculate_value_dealer(self):
         total = 0
-        print(self.dealer_hand.cards)
+        
         for i in range (0, len(self.dealer_hand.cards)):
             total += self.dealer_hand.cards[i].value
             
@@ -72,6 +87,7 @@ class Game:
     def dealer_logic(self, total):
         
         if total > 19:
+            
             return f"The dealer wants to now stand"
         elif total > 5 :
             
@@ -88,11 +104,10 @@ class Game:
         
         #while loop:
             
+         
+        
+        
         self.deal_initial_cards()
-        
-       # self.display_info_player_cards()
-        
-        self.display_info_dealer_cards()
         print(self.dealer_logic(self.calculate_value_dealer()))
         print('___________________')
         self.display_info_dealer_cards()
