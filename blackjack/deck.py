@@ -64,6 +64,9 @@ class Deck:
         rand_num1 = random.randint(0, 51)
     
         self.draw_card_list.append(self.cards[rand_num1])
+        self.cards.remove(self.cards[rand_num1])
+        
+        return self.draw_card_list
         
         
        

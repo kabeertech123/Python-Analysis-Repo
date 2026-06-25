@@ -62,6 +62,7 @@ class Game:
 
     def calculate_value_dealer(self):
         total = 0
+        print(self.dealer_hand.cards)
         for i in range (0, len(self.dealer_hand.cards)):
             total += self.dealer_hand.cards[i].value
             
@@ -72,8 +73,14 @@ class Game:
         
         if total > 19:
             return f"The dealer wants to now stand"
-        elif total < 5 :
-            self.dealer_hand.cards.append(self.deck.draw_1_card)
+        elif total > 5 :
+            
+            temp_list = self.deck.draw_1_card()
+            for i in range (0, 1):
+                self.dealer_hand.cards.append(temp_list[i])
+            
+            return f"The Dealer has Hit"
+            
 
     
     def game_loop(self):
@@ -82,11 +89,14 @@ class Game:
         #while loop:
             
         self.deal_initial_cards()
-        self.display_info_player_cards()
+        
+       # self.display_info_player_cards()
+        
+        self.display_info_dealer_cards()
+        print(self.dealer_logic(self.calculate_value_dealer()))
         print('___________________')
         self.display_info_dealer_cards()
-        self.dealer_logic(self.calculate_value_dealer)
-        self.display_info_dealer_cards()
+        print(self.calculate_value_dealer())
         
             
            
