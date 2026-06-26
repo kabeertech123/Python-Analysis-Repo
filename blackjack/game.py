@@ -23,27 +23,35 @@ class Game:
         dealer_inital_cards = self.deck.draw_2_cards()
         
         
-        dealer_total = 0
+    
         
         for i in range (0,2):
             self.player_hand.cards.append(player_inital_cards[i]) 
             self.dealer_hand.cards.append(dealer_inital_cards[i])
             
-            dealer_total +=  self.calculate_value_dealer()
-            
-          
+    
             
             if self.player_hand.cards[i].value == 0:
                 self.player_chooses_ace_value()
                 
+            if self.dealer_hand.cards[i].value == 0:
+                self.dealer_chooses_ace_value(self.calculate_value_dealer())
+                
             
-        if self.dealer_hand.cards[i] == 0 and dealer_total > 19:
+    def dealer_chooses_ace_value(self, dealer_total):
+         
+        
+        for i in range (0, len(self.dealer_hand.cards)):  
+            
+            if dealer_total > 19:
                 self.dealer_hand.cards[i].value = 1 
                 print("The dealer has set and Ace value to be 1")
+                break
                 
-        elif self.dealer_hand.cards[1] == 0 and dealer_total > 5:
-            self.dealer_hand.cards[1].value = 11     
-            print("The dealer has set and Ace value to be 11")
+            elif dealer_total > 1:
+                self.dealer_hand.cards[1].value = 11     
+                print("The dealer has set and Ace value to be 11")
+                break
         
         
         

@@ -44,14 +44,14 @@ class Deck:
     def draw_2_cards(self):
         rand_num1 = random.randint(0, 51)
         rand_num2 = random.randint(0, 51)
-        self.draw_card_list = []
+        temp_list = []
         
         if(rand_num1 == rand_num2):
             self.draw_2_cards()
         
         else:
-            self.draw_card_list.append(self.cards[rand_num1])
-            self.draw_card_list.append(self.cards[rand_num2])
+            temp_list.append(self.cards[rand_num1])
+            temp_list.append(self.cards[rand_num2])
             self.cards.remove(self.cards[rand_num1])
             self.cards.remove(self.cards[rand_num2])
             
@@ -63,6 +63,8 @@ class Deck:
     def draw_1_card(self):
         rand_num1 = random.randint(0, 51)
     
+        temp_list = []
+
         self.draw_card_list.append(self.cards[rand_num1])
         self.cards.remove(self.cards[rand_num1])
         
