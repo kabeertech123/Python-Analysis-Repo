@@ -6,7 +6,7 @@ class Card:
 
     
     def display(self):
-       return "\n".join([
+       return [
 
             "┌─────────┐",
 
@@ -22,5 +22,5 @@ class Card:
 
             "└─────────┘"
 
-        ])
+        ]
             

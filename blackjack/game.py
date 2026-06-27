@@ -31,27 +31,27 @@ class Game:
             
     
             
-            if self.player_hand.cards[i].value == 0:
-                self.player_chooses_ace_value()
+           
                 
-            if self.dealer_hand.cards[i].value == 0:
-                self.dealer_chooses_ace_value(self.calculate_value_dealer())
-                
-            
-    def dealer_chooses_ace_value(self, dealer_total):
-         
+            self.dealer_checks_ace()
         
-        for i in range (0, len(self.dealer_hand.cards)):  
+    def dealer_checks_ace(self):
+        for index,  dealer_card in enumerate(self.dealer_hand.cards):
+            if dealer_card.value == 0:
+                self.dealer_chooses_ace_value(self.calculate_value_dealer(), index)        
             
-            if dealer_total > 19:
-                self.dealer_hand.cards[i].value = 1 
-                print("The dealer has set and Ace value to be 1")
-                break
-                
-            elif dealer_total > 1:
-                self.dealer_hand.cards[1].value = 11     
-                print("The dealer has set and Ace value to be 11")
-                break
+    def dealer_chooses_ace_value(self, dealer_total, ace_pos):
+         
+      
+        if dealer_total > 19:
+            self.dealer_hand.cards[ace_pos].value = 1 
+            print("The dealer has set and Ace value to be 1")
+         
+            
+        elif dealer_total > 1:
+            self.dealer_hand.cards[ace_pos].value = 11     
+            print("The dealer has set and Ace value to be 11")
+            
         
         
         
@@ -73,13 +73,35 @@ class Game:
 
             
     def display_info_player_cards(self):
-        for player_card in (self.player_hand.cards):
-            print(player_card.display())
+        card_displays = []
+
+        for card in self.player_hand.cards:
+
+            card_displays.append(card.display())
+
+        for line in range(7):
+
+            for card in card_displays:
+
+                print(card[line], end="  ")
+
+            print()
           
     
     def display_info_dealer_cards(self):
-        for dealer_card in (self.dealer_hand.cards):
-            print(dealer_card.display())
+        card_displays = []
+
+        for card in self.dealer_hand.cards:
+
+            card_displays.append(card.display())
+
+        for line in range(7):
+
+            for card in card_displays:
+
+                print(card[line], end="  ")
+
+            print()
             
             
 
@@ -92,35 +114,154 @@ class Game:
             
         return total
     
+    def calculate_value_player(self):
+        total = 0
+        
+        for i in range (0, len(self.player_hand.cards)):
+            total += self.player_hand.cards[i].value
+            
+            
+        return total
+    
     def dealer_logic(self, total):
         
-        if total > 19:
+        if total > 17:
+            print(f"The dealer wants to now stand")
+            return 'stand'
+        elif total > 1 :
             
-            return f"The dealer wants to now stand"
-        elif total > 5 :
+            card = self.deck.draw_1_card() 
             
-            temp_list = self.deck.draw_1_card()
-            for i in range (0, 1):
-                self.dealer_hand.cards.append(temp_list[i])
+            self.dealer_hand.cards.append(card)
+            self.dealer_checks_ace()
+        
+            print(f"The Dealer has Hit")
             
-            return f"The Dealer has Hit"
+            return 'hit'
+            
+    def player_logic(self, player_total):
+        
+        for i in range (0, len(self.player_hand.cards)):
+            if self.player_hand.cards[i].value == 0:
+                self.player_chooses_ace_value()
+        
+        print(f'Your total is: {player_total}')
+        player_input = int(input((f'Enter 1 if you want to hit or 2 if u want to stand: ')))
+        
+        if player_input == 1:
+            
+            self.player_hand.cards.append(self.deck.draw_1_card())
+            
+            
+            return player_input
+            
+            
+            
+        elif player_input == 2:
+            print('you have now performed a stand')
+            return player_input
+            
+    def check_winner (self, player_total, dealer_total, player_input, dealer_input):
+        
+      
+        
+        if player_total == 21:
+            print("YOU HAVE WONNN")
+            
+            print('player cards: ')
+            self.display_info_player_cards()
+    
+            print('dealer cards: ')
+            self.display_info_dealer_cards()
+    
+            
+            return False
+            
+        elif player_total > 21:
+            print('you have lost')
+             
+            print('player cards: ')
+            self.display_info_player_cards()
+    
+            print('dealer cards: ')
+            self.display_info_dealer_cards()
+    
+            
+            return False
+        
+        elif dealer_total == 21:
+            print('you have lost')
+            
+            print('player cards: ')
+            self.display_info_player_cards()
+    
+            print('dealer cards: ')
+            self.display_info_dealer_cards()
+    
+            
+            return False
+        
+        elif dealer_total > 21:
+            print('you have wonnn')
+            
+            print('player cards: ')
+            self.display_info_player_cards()
+    
+            print('dealer cards: ')
+            self.display_info_dealer_cards()
+    
+            
+            return False
+        
+        elif player_input == 2 and dealer_input == 'stand' and player_total > dealer_total:
+            print('You have wonnnn')
+            
+            print('player cards: ')
+            self.display_info_player_cards()
+    
+            print('dealer cards: ')
+            self.display_info_dealer_cards()
+    
+            return False
             
 
+        elif player_input == 2 and dealer_input == 'stand' and player_total < dealer_total:
+            print('You have losttt')
+            
+            print('player cards: ')
+            self.display_info_player_cards()
+    
+            print('dealer cards: ')
+            self.display_info_dealer_cards()
+    
+            return False
     
     def game_loop(self):
         loop = True
-        
-        #while loop:
-            
-         
-        
+        checker = True
         
         self.deal_initial_cards()
-        print(self.dealer_logic(self.calculate_value_dealer()))
-        print('___________________')
-        self.display_info_dealer_cards()
-        print(self.calculate_value_dealer())
+        while loop:
+            print('player cards: ')
+            self.display_info_player_cards()
+            
+            print('dealer cards: ')
+            self.display_info_dealer_cards()
+            
+            self.player_logic(self.calculate_value_player())
+            
+            self.dealer_logic(self.calculate_value_dealer())
+            checker = self.check_winner(self.calculate_value_player(), self.calculate_value_dealer(), self.player_logic, self.dealer_logic)
+            
+            if checker == False:
+                loop = False
+                
+            
+            
+            
+           
         
+            
             
            
             
