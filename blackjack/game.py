@@ -1,6 +1,7 @@
 from deck import Deck
 from card import Card
 from hand import Hand
+import os
 
 class Game:
     
@@ -8,12 +9,8 @@ class Game:
         self.deck = Deck()
         self.player_hand = Hand()
         self.dealer_hand = Hand()
-        
-        
-
-
-
-
+    
+    
     
     def deal_initial_cards(self):
         self.deck.create_deck()
@@ -62,11 +59,11 @@ class Game:
             
     
         for player_cards in (self.player_hand.cards):
-            if player_choice == 1:
+            if player_choice == 1 and player_cards.value == 0:
                 player_cards.value = 1
                 
                 
-            elif player_choice == 11:
+            elif player_choice == 11 and player_cards.value == 0:
                 player_cards.value = 11
       
          
@@ -126,27 +123,75 @@ class Game:
     def dealer_logic(self, total):
         
         if total > 17:
-            print(f"The dealer wants to now stand")
+            print('')
+            print(f"Dealer Move: Stand")
             return 'stand'
-        elif total > 1 :
+        elif total > -1 :
             
             card = self.deck.draw_1_card() 
             
             self.dealer_hand.cards.append(card)
             self.dealer_checks_ace()
         
-            print(f"The Dealer has Hit")
+            print('')
+            print(f"Dealer Move: Hit")
             
             return 'hit'
             
     def player_logic(self, player_total):
-        
+        player_total = self.calculate_value_player()
         for i in range (0, len(self.player_hand.cards)):
             if self.player_hand.cards[i].value == 0:
                 self.player_chooses_ace_value()
+                
+            
+            if player_total > 21:
+                "You lost "
+                print('Player')
+                print('-------------------------')
+                self.display_info_player_cards()
+                
+                print(f'Your Total: {player_total}')
+                
+                
+                    
+                
+                print('Dealer')
+                print('-------------------------')
+            
+                
+                self.display_info_dealer_cards()
+                
+                print('-------------------------')
+                
+                print(f"Dealer's Total: {self.calculate_value_dealer()}")
+                quit()
+            
+            print('Player')
+            print('-------------------------')
+            self.display_info_player_cards()
+            
+            print(f'Your Total: {player_total}')
+            
+            
+                
+            
+            print('Dealer')
+            print('-------------------------')
         
+            
+            self.display_info_dealer_cards()
+            
+            print('-------------------------')
+            
+            print(f"Dealer's Total: {self.calculate_value_dealer()}")
+    
         print(f'Your total is: {player_total}')
-        player_input = int(input((f'Enter 1 if you want to hit or 2 if u want to stand: ')))
+        
+        print('1. Hit')
+        print('2. Stand')
+        
+        player_input = int(input(('Choice: ')))
         
         if player_input == 1:
             
@@ -167,91 +212,178 @@ class Game:
         
         if player_total == 21:
             print("YOU HAVE WONNN")
-            
-            print('player cards: ')
+            print('')
+            print('Player')
+            print('-------------------------')
             self.display_info_player_cards()
-    
-            print('dealer cards: ')
+            
+            print(f'Your Total: {self.calculate_value_player()}')
+            
+            print('Dealer')
+            print('-------------------------')
+        
+            
             self.display_info_dealer_cards()
-    
+            
+            print('-------------------------')
+            
+            print(f"Dealer's Total: {self.calculate_value_dealer()}")
             
             return False
             
         elif player_total > 21:
             print('you have lost')
-             
-            print('player cards: ')
+            print('')
+            print('Player')
+            print('-------------------------')
             self.display_info_player_cards()
-    
-            print('dealer cards: ')
+            
+            print(f'Your Total: {self.calculate_value_player()}')
+            
+            print('Dealer')
+            print('-------------------------')
+        
+            
             self.display_info_dealer_cards()
+            
+            print('-------------------------')
+            
+            print(f"Dealer's Total: {self.calculate_value_dealer()}")
     
             
             return False
         
         elif dealer_total == 21:
             print('you have lost')
-            
-            print('player cards: ')
+            print('')
+            print('Player')
+            print('-------------------------')
             self.display_info_player_cards()
-    
-            print('dealer cards: ')
+            
+            print(f'Your Total: {self.calculate_value_player()}')
+            
+            print('Dealer')
+            print('-------------------------')
+        
+            
             self.display_info_dealer_cards()
-    
+            
+            print('-------------------------')
+            
+            print(f"Dealer's Total: {self.calculate_value_dealer()}")
             
             return False
         
         elif dealer_total > 21:
             print('you have wonnn')
-            
-            print('player cards: ')
+            print('')
+            print('Player')
+            print('-------------------------')
             self.display_info_player_cards()
-    
-            print('dealer cards: ')
+            
+            print(f'Your Total: {self.calculate_value_player()}')
+            
+            print('Dealer')
+            print('-------------------------')
+        
+            
             self.display_info_dealer_cards()
+            
+            print('-------------------------')
+            
+            print(f"Dealer's Total: {self.calculate_value_dealer()}")
     
             
             return False
         
         elif player_input == 2 and dealer_input == 'stand' and player_total > dealer_total:
             print('You have wonnnn')
-            
-            print('player cards: ')
+            print('')
+            print('Player')
+            print('-------------------------')
             self.display_info_player_cards()
-    
-            print('dealer cards: ')
+            
+            print(f'Your Total: {self.calculate_value_player()}')
+            
+            print('Dealer')
+            print('-------------------------')
+        
+            
             self.display_info_dealer_cards()
+            
+            print('-------------------------')
+            
+            print(f"Dealer's Total: {self.calculate_value_dealer()}")
     
             return False
             
 
         elif player_input == 2 and dealer_input == 'stand' and player_total < dealer_total:
             print('You have losttt')
-            
-            print('player cards: ')
+            print('')
+            print('Player')
+            print('-------------------------')
             self.display_info_player_cards()
-    
-            print('dealer cards: ')
+            
+            print(f'Your Total: {self.calculate_value_player()}')
+            
+            print('Dealer')
+            print('-------------------------')
+        
+            
             self.display_info_dealer_cards()
+            
+            print('-------------------------')
+            
+            print(f"Dealer's Total: {self.calculate_value_dealer()}")
     
             return False
+        elif player_input == 2 and dealer_input == 'stand' and player_total == dealer_total:
+            print('It is a tie')
+            print('')
+            print('Player')
+            print('-------------------------')
+            self.display_info_player_cards()
+            
+            print(f'Your Total: {self.calculate_value_player()}')
+            
+            print('Dealer')
+            print('-------------------------')
+        
+            
+            self.display_info_dealer_cards()
+            
+            print('-------------------------')
+            
+            print(f"Dealer's Total: {self.calculate_value_dealer()}")
     
+            return False
     def game_loop(self):
         loop = True
         checker = True
         
         self.deal_initial_cards()
         while loop:
-            print('player cards: ')
+            print('Player')
+            print('-------------------------')
             self.display_info_player_cards()
             
-            print('dealer cards: ')
+            print(f'Your Total: {self.calculate_value_player()}')
+            
+            print('Dealer')
+            print('-------------------------')
+        
+            
             self.display_info_dealer_cards()
+            
+            print('-------------------------')
+            
+            print(f"Dealer's Total: {self.calculate_value_dealer()}")
             
             self.player_logic(self.calculate_value_player())
             
             self.dealer_logic(self.calculate_value_dealer())
-            checker = self.check_winner(self.calculate_value_player(), self.calculate_value_dealer(), self.player_logic, self.dealer_logic)
+            checker = self.check_winner(self.calculate_value_player(), self.calculate_value_dealer(), self.player_logic(self.calculate_value_player()), self.dealer_logic(self.calculate_value_dealer()))
             
             if checker == False:
                 loop = False
@@ -275,14 +407,23 @@ class Game:
 
 
 
+def clear_screen():
+    print("\033[2J\033[H", end="")
+
 game = Game()
 
+print("=" * 35)
+print("          ♠ BLACKJACK ♥")
+print("=" * 35)
 
 print('Enter the 1 key if you want to play blackjack')
 print('')
 print('Or to quit, press the number 2 key')
 
 start_game = int(input('Your choice: '))
+
+clear_screen()
+
 
 if start_game == 2:
     loop = False
